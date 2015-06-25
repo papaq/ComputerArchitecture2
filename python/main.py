@@ -5,7 +5,7 @@ from bottle import *
 
 @route('/hello')
 def hello():
-    return "Hello World!"
+    return "Hello!"
 
 
 @error(404)
