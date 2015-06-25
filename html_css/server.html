@@ -3,8 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>Server</title>
+    <link type="text/css" media="all" rel="stylesheet" href="server.css">
 </head>
 <body>
+    <h1 class="page_title"><b>SERVER</b></h1>
+    <div id="global">
+        <p><label for="main_string">Main string</label></p>
+        <textarea rows="6" id="main_string" class="input" placeholder="Input string or press Random button"></textarea>
+        <button id="random_up" class="button">Random</button>
 
+        <p><label for="substring">Looking for string</label></p>
+        <textarea rows="6" id="substring" class="input" placeholder="Input string or press Random button"></textarea>
+        <button id="random_down" class="button">Random</button>
+
+        <label class="bb_text"><br/>DONE:</label><label id="done" class= "bb_text">00%</label>
+        <label><br/>Amount of clients:</label><label id="n_clients">0</label>
+    </div>
 </body>
 </html>

@@ -1,0 +1,49 @@
+.page_title
+{
+    margin-top: 2%;
+    text-align: center;
+}
+
+#global
+{
+    position: fixed;
+    align-self: center;
+    width: 70%;
+    margin: 1% 15% 5% 15%;
+    padding: 5px 30px 20px 15px;
+    border: solid;
+    border-radius: 10px;
+}
+
+.input
+{
+    height: auto;
+    width: 100%;
+    //margin-top: 20px;
+    resize: vertical;
+}
+
+.button
+{
+    border-radius: 20px;
+    border: solid black 2px;
+    background-color: transparent;
+    height: 30px;
+    width: 70px;
+    margin: 0 0 20px 5px;
+}
+
+.bb_text
+{
+    font-size: 250%;
+}
+
+#done
+{
+    margin-left: 30%;
+}
+
+#n_clients
+{
+    margin-left: 30%;
+}
