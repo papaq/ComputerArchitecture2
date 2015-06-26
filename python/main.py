@@ -9,18 +9,28 @@ def hello():
 
 
 @error(404)
-def error404():
+def error404(_error):
     return 'wrong, 404!'
 
 
-@get('/server')
+@route('/server')
 def visit_server():
-    return static_file('server.html', root='./')
+    return static_file('server.html', root='../html_css/')
 
 
-@get('/server')
+@get('/client')
 def visit_server():
-    return static_file('client.html', root='./')
+    return static_file('client.html', root='../html_css/')
+
+
+@get('/js/server.js')
+def visit_server():
+    return static_file('server.js', root='../js/')
+
+
+@get('/server.css')
+def visit_server():
+    return static_file('server.css', root='../html_css/')
 
 
 run(host='localhost', port=8080, debug=True)
