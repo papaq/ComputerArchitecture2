@@ -1,7 +1,7 @@
 from bottle import *
+import json
 
-# from bottle import route, run
-
+clients = 1
 
 @route('/hello')
 def hello():
@@ -32,5 +32,8 @@ def visit_server():
 def visit_server():
     return static_file('server.css', root='../html_css/')
 
+@get("/clients/count")
+def get_clients_count():
+    return json.dumps({'count': clients})
 
 run(host='localhost', port=8080, debug=True)
