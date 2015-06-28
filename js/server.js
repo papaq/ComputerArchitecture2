@@ -52,7 +52,7 @@ var server_object = server_object || {};
     };
 
     document.getElementById("start").addEventListener("click", function () {
-        document.getElementById("done").innerText = "00%";
+        document.getElementById("done").innerText = "0%";
         document.getElementById("result").value = "";
         console.log("hi");
 
@@ -73,8 +73,8 @@ var server_object = server_object || {};
                     return;
                 }
                 else {
-                    var done = 0;
-                    while (done < 100) {
+                    var myVar = setInterval(function () {
+                        var done = 0;
                         obj.get_request('/tasks/done', function (respond_text) {
                             var json = JSON.parse(respond_text);
                             done = json.done;
@@ -84,12 +84,12 @@ var server_object = server_object || {};
                                 obj.get_request('/tasks/result', function (respond_text) {
                                     var json = JSON.parse(respond_text);
                                     document.getElementById("result").value = obj.substring + "=" + json.result;
+                                    clearInterval(myVar);
                                 })
                             }
                         });
+                    }, 1000);
 
-                        sleep(1000);
-                    }
                 }
             });
 

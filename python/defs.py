@@ -15,9 +15,11 @@ def find_vocabulary_by_field(_list, key, value):
 def update_workers(_list):
     if not _list:
         return
-    for i in xrange(len(_list)):
+    i = 0
+    while i < len(_list):
         if _list[i]["seen"] + 4 < time():
             del _list[i]
+        i += 1
 
 
 def new_client(_list, name):
@@ -36,9 +38,9 @@ def devide_into_substrings(len_a, b, new_len):
     if len(b) < new_len:
         return [b]
     while pos + 2 * new_len < len(b):
-        return_list.append(b[pos, new_len])
+        return_list.append(b[pos: new_len])
         pos += new_len - len_a + 1
-    return_list.append(b[pos, len(b) - pos + 1])
+    return_list.append(b[pos: len(b) - pos + 1])
     return return_list
 
 

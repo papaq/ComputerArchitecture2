@@ -50,8 +50,6 @@ def visit_server():
 @get("/clients/count")
 def get_clients_count():
     update_workers(clients)
-    print(len(clients))
-    print(clients)
     return json.dumps({'count': len(clients)})
 
 
@@ -116,7 +114,7 @@ def update_client(client_name=""):
     return "OK"
 
 
-@get("tasks/get_task")
+@get("/tasks/get_task")
 def give_task():
     global tasks
     if not tasks:
@@ -125,11 +123,11 @@ def give_task():
         if not task["done"]:
             return json.dumps({"number": task["number"],
                                "substring": task["strings"][0],
-                               "main_string": tasks["strings"][1]})
+                               "main_string": task["strings"][1]})
     return json.dumps("nothing_to_do")
 
 
-@post("tasks/return_result")
+@post("/tasks/return_result")
 def get_result():
     global tasks, result
     number = request.forms.get('number')
@@ -145,7 +143,7 @@ def get_result():
 def task_result():
     global tasks, done_tasks
     done_tasks.append({"strings": [substring, main_string],
-    "result": result})
+                       "result": result})
 
     tasks = []
     return json.dumps({"result": result})
