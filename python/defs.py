@@ -43,4 +43,4 @@ def devide_into_substrings(len_a, b, new_len):
 
 
 def prepair_tasks(substr_list, substring):
-    return [{"number": i, "task": [substring, substr_list[i]], "done": False} for i in xrange(len(substr_list))]
+    return [{"number": i, "strings": [substring, substr_list[i]], "done": False} for i in xrange(len(substr_list))]

@@ -9,6 +9,7 @@ main_string = ""
 clients = []
 tasks = []
 done_tasks = []
+result = 0
 
 
 @route('/hello')
@@ -56,20 +57,21 @@ def get_clients_count():
 
 @post("/tasks/new_task")
 def add_new_task():
-    global tasks
+    global tasks, result
     global substring, main_string
     substring = request.forms.get('substring')
     main_string = request.forms.get('main_string')
     if len(substring) > len(main_string):
         return json.dumps({'task_was_done': True,
-                          'result': "Check Your laces"})
+                           'result': "Check Your laces"})
     if done_tasks:
         for i in xrange(len(done_tasks)):
-            if (done_tasks[i]["task"][0] == substring &
-                done_tasks[i]["task"][1] == main_string):
+            if (done_tasks[i]["strings"][0] == substring &
+                done_tasks[i]["strings"][1] == main_string):
                 return json.dumps({'task_was_done': True,
-                                  'result': done_tasks[i]["result"]})
+                                   'result': done_tasks[i]["result"]})
 
+    result = 0
     a_len = len(substring)
     tasks = prepair_tasks(devide_into_substrings(a_len, main_string, 5 * a_len), substring)
     return json.dumps({'task_was_done': False})
@@ -116,7 +118,37 @@ def update_client(client_name=""):
 
 @get("tasks/get_task")
 def give_task():
-    return
+    global tasks
+    if not tasks:
+        return json.dumps("nothing_to_do")
+    for task in tasks:
+        if not task["done"]:
+            return json.dumps({"number": task["number"],
+                               "substring": task["strings"][0],
+                               "main_string": tasks["strings"][1]})
+    return json.dumps("nothing_to_do")
+
+
+@post("tasks/return_result")
+def get_result():
+    global tasks, result
+    number = request.forms.get('number')
+    _result = request.forms.get('result')
+
+    tasks[number]["done"] = True
+    result += _result
+
+    return "OK"
+
+
+@get("/tasks/result")
+def task_result():
+    global tasks, done_tasks
+    done_tasks.append({"strings": [substring, main_string],
+    "result": result})
+
+    tasks = []
+    return json.dumps({"result": result})
 
 
 run(host='localhost', port=8081, debug=True)
