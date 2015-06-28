@@ -17,8 +17,7 @@ var server_object = server_object || {};
 
 (function(obj){
     obj.xmlhttp = null;
-    obj.receive_respond_and_do = null;
-    obj.web_worker = null;
+    obj.receive_respond_and_do = function(){};
     obj.main_string = "";
     obj.substring = "";
 
@@ -31,21 +30,23 @@ var server_object = server_object || {};
         if (obj.xmlhttp === null){
             obj.xmlhttp = new XMLHttpRequest();
             obj.xmlhttp.onreadystatechange = function() {
-                obj.receive_respond_and_do(obj.xmlhttp.responseText);
+                if (obj.xmlhttp.readyState === 4 && obj.xmlhttp.status === 200) {
+                    obj.receive_respond_and_do(obj.xmlhttp.responseText);
+                }
             }
         }
     };
 
     obj.get_request = function(url, receive_respond_and_do){
+        obj.receive_respond_and_do = receive_respond_and_do;
         obj.xmlhttp.open("GET", url, true);
-        obj.receive_response_and_do = receive_respond_and_do;
         obj.xmlhttp.send();
     };
 
     obj.post_request = function(url, data, receive_respond_and_do){
+        obj.receive_respond_and_do = receive_respond_and_do;
         obj.xmlhttp.open("POST", url, true);
-        obj.receive_response_and_do = receive_respond_and_do;
-        //obj.xmlhttp.setRequestHeader()
+        //obj.xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
         obj.xmlhttp.send(data);
     };
 
@@ -62,7 +63,7 @@ var server_object = server_object || {};
         else{
             console.log("Ku");
 
-            var post_data = "str_in" + obj.substring + "&str_full" + obj.main_string;
+            var post_data = "substring" + obj.substring + "&main_string" + obj.main_string;
 
             obj.post_request('/tasks/new_task', encodeURI(post_data), function(respond_text){
                 var json = JSON.parse(respond_text);
@@ -89,8 +90,10 @@ var server_object = server_object || {};
 
     obj.request();
 
+
+
     setInterval(function() {
-        obj.get_request('/clients/count', function(respond_text){
+        obj.get_request('/clients/count', function (respond_text){
             var json = JSON.parse(respond_text);
             document.getElementById("n_clients").innerText = json.count;
         })

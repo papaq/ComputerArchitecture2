@@ -14,18 +14,25 @@
         <button id="random_up" class="button">Random</button>
         -->
 
-        <p><label for="main_string">In string</label></p>
+        <p><label for="main_string">In set of strings</label></p>
         <textarea rows="6" id="main_string" class="input" placeholder="Input string"></textarea>
         <!--
         <button id="random_down" class="button">Random</button>
         -->
 
-        <button id="start" class="button" style="float: right;">Start searching</button>
+        <button id="start" class="button" style="float: right;">Start search</button>
 
-        <textarea rows="6" id="result" class="input" placeholder="Waiting for result"></textarea>
+        <textarea rows="3" id="result" class="input" placeholder="Waiting for result"></textarea>
 
-        <label class="bb_text"><br/>DONE:</label><label id="done" class= "bb_text">00%</label>
-        <label><br/>Amount of clients:</label><label id="n_clients">0</label>
+        <div class="left_div">
+            <label class="big_text">DONE:</label>
+        </div>
+        <label id="done" class= "big_text">00%<br/></label>
+
+        <div class="left_div">
+            <label>Amount of clients:</label>
+        </div>
+        <label id="n_clients">0</label>
     </div>
     <script type="text/javascript" src="../js/server.js"></script>
 </body>
