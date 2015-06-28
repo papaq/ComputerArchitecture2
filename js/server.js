@@ -63,7 +63,7 @@ var server_object = server_object || {};
         else{
             console.log("Ku");
 
-            var post_data = "substring" + obj.substring + "&main_string" + obj.main_string;
+            var post_data = "substring=" + obj.substring + "&main_string=" + obj.main_string;
 
             obj.post_request('/tasks/new_task', encodeURI(post_data), function(respond_text){
                 var json = JSON.parse(respond_text);

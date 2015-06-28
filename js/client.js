@@ -22,5 +22,5 @@ window.onload = function () {
     get_request("/clients/new_client", function (respond_text) {
         document.getElementById("client_name").innerText = JSON.parse(respond_text).name;
     });
-    web_worker = new Worker("/c_worker.js")
+    var web_worker = new Worker("/c_worker.js")
 };

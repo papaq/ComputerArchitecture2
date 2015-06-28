@@ -6,8 +6,8 @@ from defs import *
 
 substring = ""
 main_string = ""
-clients_count = 1
 clients = []
+tasks = []
 done_tasks = []
 
 
@@ -56,24 +56,47 @@ def get_clients_count():
 
 @post("/tasks/new_task")
 def add_new_task():
+    global tasks
     global substring, main_string
     substring = request.forms.get('substring')
     main_string = request.forms.get('main_string')
+    if len(substring) > len(main_string):
+        return json.dumps({'task_was_done': True,
+                          'result': "Check Your laces"})
+    if done_tasks:
+        for i in xrange(len(done_tasks)):
+            if (done_tasks[i]["task"][0] == substring &
+                done_tasks[i]["task"][1] == main_string):
+                return json.dumps({'task_was_done': True,
+                                  'result': done_tasks[i]["result"]})
 
-    return json.dumps({'task_was_done': True},
-                      {'result': 10})
+    a_len = len(substring)
+    tasks = prepair_tasks(devide_into_substrings(a_len, main_string, 5 * a_len), substring)
+    return json.dumps({'task_was_done': False})
+
+
+@get("/tasks/done")
+def calculate_done():
+    global tasks
+    done = 0
+    if not tasks:
+        return 100
+    for task in tasks:
+        if task["done"]:
+            done += 1
+    return json.dumps({'done': done * 100 / len(tasks)})
 
 
 @get("/clients/new_client")
 def add_new_client():
     name = uuid.uuid4()
-    clients.append({"name": str(name), "seen": time()})
+    new_client(clients, str(name))
     return json.dumps({'name': str(name)})
 
 
 @get("/clients/last_client")
 def show_last_client():
-    return json.dumps({'name': clients[len(clients)-1]["name"]})
+    return json.dumps({'name': clients[len(clients) - 1]["name"]})
 
 
 @get("/c_worker.js")
@@ -86,12 +109,13 @@ def update_client(client_name=""):
     print(str(len(clients)))
     if client_name == "":
         return
-    index = find_vocabulary_by_field(clients, "name", client_name)
-    if index == -1:
-        clients.append({"name": client_name, "seen": time()})
-    else:
-        clients[index]["seen"] = time()
+    new_client(clients, client_name)
     print(str(len(clients)) + "  " + client_name)
+    return "OK"
+
+
+@get("tasks/get_task")
+def give_task():
     return
 
 
