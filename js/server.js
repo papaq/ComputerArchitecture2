@@ -52,6 +52,7 @@ var server_object = server_object || {};
     };
 
     document.getElementById("start").addEventListener("click", function () {
+        document.getElementById("start").disabled = true;
         document.getElementById("done").innerText = "0%";
         document.getElementById("result").value = "";
         console.log("hi");
@@ -59,7 +60,7 @@ var server_object = server_object || {};
         set_strings(document.getElementById("substring").value, document.getElementById("main_string").value);
         if (obj.substring == "" || obj.main_string == "") {
             document.getElementById("result").value = obj.substring + "=0";
-            return;
+            document.getElementById("start").disabled = true;
         }
         else {
             console.log("Ku");
@@ -70,7 +71,7 @@ var server_object = server_object || {};
                 var json = JSON.parse(respond_text);
                 if (json.task_was_done) {
                     document.getElementById("result").value = obj.substring + "=" + json.result;
-                    return;
+                    document.getElementById("start").disabled = true;
                 }
                 else {
                     var myVar = setInterval(function () {
@@ -84,6 +85,7 @@ var server_object = server_object || {};
                                 obj.get_request('/tasks/result', function (respond_text) {
                                     var json = JSON.parse(respond_text);
                                     document.getElementById("result").value = obj.substring + "=" + json.result;
+                                    document.getElementById("start").disabled = true;
                                     clearInterval(myVar);
                                 })
                             }
