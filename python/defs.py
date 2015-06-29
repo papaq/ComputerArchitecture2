@@ -38,9 +38,9 @@ def devide_into_substrings(len_a, b, new_len):
     if len(b) < new_len:
         return [b]
     while pos + 2 * new_len < len(b):
-        return_list.append(b[pos: new_len])
+        return_list.append(b[pos: pos + new_len])
         pos += new_len - len_a + 1
-    return_list.append(b[pos: len(b) - pos + 1])
+    return_list.append(b[pos: len(b)])
     return return_list
 
 

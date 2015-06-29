@@ -2,25 +2,109 @@
  * Created by solomon on 25.06.15.
  */
 
-//var client_object = client_object || {};
+function random_fill(n) {
+    var random_string = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-xmlhttp = new XMLHttpRequest();
-receive_respond_and_do = function(){};
-xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                receive_respond_and_do(xmlhttp.responseText);
+    for (var i = 0; i < n; i++) {
+        random_string += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    return random_string;
+}
+
+var server_object = server_object || {};
+
+(function (obj) {
+    obj.xmlhttp = null;
+    obj.receive_respond_and_do = function () {
+    };
+    obj.main_string = "";
+    obj.substring = "";
+
+    function set_strings(string1, string2) {
+        obj.substring = string1;
+        obj.main_string = string2;
+    }
+
+    obj.request = function () {
+        if (obj.xmlhttp === null) {
+            obj.xmlhttp = new XMLHttpRequest();
+            obj.xmlhttp.onreadystatechange = function () {
+                if (obj.xmlhttp.readyState === 4 && obj.xmlhttp.status === 200) {
+                    obj.receive_respond_and_do(obj.xmlhttp.responseText);
+                }
             }
-        };
+        }
+    };
 
-get_request = function (url, respond_and_do) {
-    receive_respond_and_do = respond_and_do;
-    xmlhttp.open("GET", url, true);
-    xmlhttp.send();
-};
+    obj.get_request = function (url, receive_respond_and_do) {
+        obj.receive_respond_and_do = receive_respond_and_do;
+        obj.xmlhttp.open("GET", url, true);
+        obj.xmlhttp.send();
+    };
 
-window.onload = function () {
-    get_request("/clients/new_client", function (respond_text) {
-        document.getElementById("client_name").innerText = JSON.parse(respond_text).name;
+    obj.post_request = function (url, data, receive_respond_and_do) {
+        obj.receive_respond_and_do = receive_respond_and_do;
+        obj.xmlhttp.open("POST", url, true);
+        //obj.xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        obj.xmlhttp.send(data);
+    };
+
+    document.getElementById("start").addEventListener("click", function () {
+        document.getElementById("start").disabled = true;
+        document.getElementById("done").innerText = "0%";
+        document.getElementById("result").value = "";
+
+        set_strings(document.getElementById("substring").value, document.getElementById("main_string").value);
+        if (obj.substring == "" || obj.main_string == "") {
+            document.getElementById("result").value = obj.substring + "=0";
+            document.getElementById("start").disabled = false;
+        }
+        else {
+
+            var post_data = "substring=" + obj.substring + "&main_string=" + obj.main_string;
+
+            obj.post_request('/tasks/new_task', encodeURI(post_data), function (respond_text) {
+                var json = JSON.parse(respond_text);
+                if (json.task_was_done) {
+                    document.getElementById("result").value = obj.substring + "=" + json.result;
+                    document.getElementById("start").disabled = false;
+                }
+
+                else {
+                    var myVar = setInterval(function () {
+                        var done = 0;
+                        obj.get_request('/tasks/done', function (respond_text) {
+                            var json = JSON.parse(respond_text);
+                            done = json.done;
+                            document.getElementById("done").innerText = done + "%";
+
+                            if (done == 100) {
+                                obj.get_request('/tasks/result', function (respond_text) {
+                                    var json = JSON.parse(respond_text);
+                                    document.getElementById("result").value = obj.substring + "=" + json.result;
+                                    document.getElementById("start").disabled = false;
+                                    clearInterval(myVar);
+                                })
+                            }
+                        });
+                    }, 3000);
+
+                }
+            });
+
+        }
     });
-    var web_worker = new Worker("/c_worker.js")
-};
+
+    obj.request();
+
+
+    setInterval(function () {
+        obj.get_request('/clients/count', function (respond_text) {
+            var json = JSON.parse(respond_text);
+            document.getElementById("n_clients").innerText = json.count;
+        })
+    }, 3000)
+
+})(server_object);

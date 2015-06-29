@@ -22,19 +22,14 @@ def error404(_error):
     return 'wrong, 404!'
 
 
-@route('/server')
-def visit_server():
-    return static_file('server.html', root='../html_css/')
-
-
-@get('/client')
+@route('/client')
 def visit_server():
     return static_file('client.html', root='../html_css/')
 
 
-@get('/js/server.js')
+@get('/worker')
 def visit_server():
-    return static_file('server.js', root='../js/')
+    return static_file('worker.html', root='../html_css/')
 
 
 @get('/js/client.js')
@@ -42,9 +37,14 @@ def visit_server():
     return static_file('client.js', root='../js/')
 
 
-@get('/server.css')
+@get('/js/worker.js')
 def visit_server():
-    return static_file('server.css', root='../html_css/')
+    return static_file('worker.js', root='../js/')
+
+
+@get('/client.css')
+def visit_server():
+    return static_file('client.css', root='../html_css/')
 
 
 @get("/clients/count")
@@ -64,8 +64,7 @@ def add_new_task():
                            'result': "Check Your laces"})
     if done_tasks:
         for i in xrange(len(done_tasks)):
-            if (done_tasks[i]["strings"][0] == substring &
-                done_tasks[i]["strings"][1] == main_string):
+            if done_tasks[i]["strings"][0] == substring and done_tasks[i]["strings"][1] == main_string:
                 return json.dumps({'task_was_done': True,
                                    'result': done_tasks[i]["result"]})
 
@@ -110,6 +109,7 @@ def update_client(client_name=""):
     if client_name == "":
         return
     print(str(len(clients)) + "  " + client_name)
+    new_client(clients, client_name)
     return "OK"
 
 
@@ -123,23 +123,26 @@ def give_task():
             return json.dumps({"number": task["number"],
                                "substring": task["strings"][0],
                                "main_string": task["strings"][1]})
-    tasks = []
+
     return json.dumps("nothing_to_do")
 
 
-@post("/tasks/return_result")
+@post("/tasks/post_result")
 def get_result():
     global tasks, result
-    number = int(request.forms.get('task_number'))
+    task_number = int(request.forms.get('task_number'))
     _result = int(request.forms.get('result'))
 
-    print("return_result ##################" + str(number) + " " + str(_result))
-
+    print("return_result ################## " + str(task_number) + " " + str(_result))
+    print(tasks)
     if tasks:
-        if len(tasks) > number:
-            if not tasks[number]["done"]:
-                tasks[number]["done"] = True
+        print(tasks)
+        if len(tasks) > task_number:
+            if not tasks[task_number]["done"]:
+                tasks[task_number]["done"] = True
                 result += _result
+                print(result)
+                print(tasks)
 
     return "OK"
 

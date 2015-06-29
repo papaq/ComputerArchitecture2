@@ -3,17 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Client</title>
-    <link type="text/css" media="all" rel="stylesheet" href="server.css">
+    <link type="text/css" media="all" rel="stylesheet" href="client.css">
 </head>
 <body>
     <h1 class="page_title"><b>CLIENT</b></h1>
     <div id="global">
-        <div class="left_div">
-            <label class="big_text">NAME:</label>
-        </div>
-        <label id="client_name" class="big_text">no_name</label>
-    </div>
+        <p><label for="substring">Find string</label></p>
+        <textarea rows="6" id="substring" class="input" placeholder="Input string"></textarea>
+        <!--
+        <button id="random_up" class="button">Random</button>
+        -->
 
+        <p><label for="main_string">In set of strings</label></p>
+        <textarea rows="6" id="main_string" class="input" placeholder="Input string"></textarea>
+        <!--
+        <button id="random_down" class="button">Random</button>
+        -->
+
+        <button id="start" class="button" style="float: right;">Start search</button>
+
+        <textarea rows="3" id="result" class="input" placeholder="Waiting for result"></textarea>
+
+        <div class="left_div">
+            <label class="big_text">DONE:</label>
+        </div>
+        <label id="done" class= "big_text">0%</label>
+
+        <br/>
+
+        <div class="left_div">
+            <label>Amount of clients:</label>
+        </div>
+        <label id="n_clients">0</label>
+    </div>
     <script type="text/javascript" src="../js/client.js"></script>
 </body>
 </html>
