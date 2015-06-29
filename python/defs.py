@@ -17,7 +17,7 @@ def update_workers(_list):
         return
     i = 0
     while i < len(_list):
-        if _list[i]["seen"] + 4 < time():
+        if _list[i]["seen"] + 5 < time():
             del _list[i]
         i += 1
 

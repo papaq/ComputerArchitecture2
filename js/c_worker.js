@@ -3,6 +3,7 @@
  */
 
 var client_name = "";
+var task = undefined;
 var xmlhttp = new XMLHttpRequest();
 receive_respond_and_do = function(){};
 xmlhttp.onreadystatechange = function () {
@@ -20,7 +21,7 @@ get_request = function (url, respond_and_do) {
 post_request = function (url, data, respond_and_do) {
     receive_respond_and_do = respond_and_do;
     xmlhttp.open("POST", url, true);
-    //obj.xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
     xmlhttp.send(data);
 };
 
@@ -41,20 +42,20 @@ n_times_a_in_b = function(a, b){
 })();
 
 setInterval(function im_here(){
-    get_request("clients/here/" + client_name, function(){})
-}, 1000);
+    get_request("/clients/here/" + client_name, function(){})
+}, 3000);
 
 setInterval(function i_wanna_work(){
-    var task = undefined;
-    get_request("tasks/get_task", function(respond_text){
+    var answer = "";
+    get_request("/tasks/get_task", function(respond_text){
         task = JSON.parse(respond_text)
     });
 
     if (task === undefined || task == "nothing_to_do")
         return;
 
-    var answer = "task_number=" + task.number +
+    answer = "task_number=" + task.number +
         "&result=" + n_times_a_in_b(task.substring, task.main_string);
 
-    post_request("tasks/return_result", encodeURI(answer), function(){})
-}, 2000);
+    post_request("/tasks/return_result", encodeURI(answer), function(){});
+}, 7000);

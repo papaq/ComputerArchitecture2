@@ -78,6 +78,7 @@ def add_new_task():
 @get("/tasks/done")
 def calculate_done():
     global tasks
+    print(tasks)
     done = 0
     if not tasks:
         return 100
@@ -106,10 +107,8 @@ def visit_worker():
 
 @get("/clients/here/<client_name>")
 def update_client(client_name=""):
-    print(str(len(clients)))
     if client_name == "":
         return
-    new_client(clients, client_name)
     print(str(len(clients)) + "  " + client_name)
     return "OK"
 
@@ -124,17 +123,23 @@ def give_task():
             return json.dumps({"number": task["number"],
                                "substring": task["strings"][0],
                                "main_string": task["strings"][1]})
+    tasks = []
     return json.dumps("nothing_to_do")
 
 
 @post("/tasks/return_result")
 def get_result():
     global tasks, result
-    number = request.forms.get('number')
-    _result = request.forms.get('result')
+    number = int(request.forms.get('task_number'))
+    _result = int(request.forms.get('result'))
 
-    tasks[number]["done"] = True
-    result += _result
+    print("return_result ##################" + str(number) + " " + str(_result))
+
+    if tasks:
+        if len(tasks) > number:
+            if not tasks[number]["done"]:
+                tasks[number]["done"] = True
+                result += _result
 
     return "OK"
 
@@ -145,7 +150,6 @@ def task_result():
     done_tasks.append({"strings": [substring, main_string],
                        "result": result})
 
-    tasks = []
     return json.dumps({"result": result})
 
 

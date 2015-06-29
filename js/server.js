@@ -73,6 +73,7 @@ var server_object = server_object || {};
                     document.getElementById("result").value = obj.substring + "=" + json.result;
                     document.getElementById("start").disabled = true;
                 }
+
                 else {
                     var myVar = setInterval(function () {
                         var done = 0;
@@ -90,7 +91,7 @@ var server_object = server_object || {};
                                 })
                             }
                         });
-                    }, 1000);
+                    }, 3000);
 
                 }
             });
@@ -106,6 +107,6 @@ var server_object = server_object || {};
             var json = JSON.parse(respond_text);
             document.getElementById("n_clients").innerText = json.count;
         })
-    }, 1000)
+    }, 3000)
 
 })(server_object);
