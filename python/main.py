@@ -12,49 +12,75 @@ done_tasks = []
 result = 0
 
 
-@route('/hello')
-def hello():
-    return "Hello!"
-
-
 @error(404)
 def error404(_error):
+    """
+    Tracking 404-error pages
+    :param _error: error
+    :return: message about trouble
+    """
     return 'wrong, 404!'
 
 
 @route('/client')
-def visit_server():
+def visit_client():
+    """
+    Tracking client-page requests
+    :return: client web-page
+    """
     return static_file('client.html', root='../html_css/')
 
 
 @get('/worker')
-def visit_server():
+def visit_worker():
+    """
+    Tracking worker-page requests
+    :return: worker web-page
+    """
     return static_file('worker.html', root='../html_css/')
 
 
 @get('/js/client.js')
-def visit_server():
+def get_client_js():
     return static_file('client.js', root='../js/')
 
 
 @get('/js/worker.js')
-def visit_server():
+def get_worker_js():
+    """
+    Tracking worker.js file requests
+    :return: worker.js file
+    """
     return static_file('worker.js', root='../js/')
 
 
 @get('/client.css')
-def visit_server():
+def get_client_css():
+    """
+    Tracking client.css file requests
+    :return: client.css file
+    """
     return static_file('client.css', root='../html_css/')
 
 
 @get("/clients/count")
 def get_clients_count():
+    """
+    Tracking clients amount request
+    Updating clients list
+    :return: clients amount
+    """
     update_workers(clients)
     return json.dumps({'count': len(clients)})
 
 
 @post("/tasks/new_task")
 def add_new_task():
+    """
+    Tracking requests on adding new task
+    Dividing task into parts
+    :return: result, if this task was executed earlier
+    """
     global tasks, result
     global substring, main_string
     substring = request.forms.get('substring')
@@ -76,6 +102,10 @@ def add_new_task():
 
 @get("/tasks/done")
 def calculate_done():
+    """
+    Tracking requests on task execution process
+    :return: <done parts> * 100 / <all parts>
+    """
     global tasks
     done = 0
     if not tasks:
@@ -88,23 +118,31 @@ def calculate_done():
 
 @get("/clients/new_client")
 def add_new_client():
+    """
+    Tracking new client adding requests
+    :return: unique client name
+    """
     name = uuid.uuid4()
     new_client(clients, str(name))
     return json.dumps({'name': str(name)})
 
 
-@get("/clients/last_client")
-def show_last_client():
-    return json.dumps({'name': clients[len(clients) - 1]["name"]})
-
-
 @get("/c_worker.js")
 def visit_worker():
+    """
+    Tracking c_worker.js file request
+    :return: c_worker.js file
+    """
     return static_file('c_worker.js', root='../js/')
 
 
 @get("/clients/here/<client_name>")
 def update_client(client_name=""):
+    """
+    Tracking clients saying "hi!"-requests
+    :param client_name: name of client
+    :return: "OK"
+    """
     if client_name == "":
         return
     new_client(clients, client_name)
@@ -113,6 +151,11 @@ def update_client(client_name=""):
 
 @get("/tasks/get_task")
 def give_task():
+    """
+    Tracking task request
+    Marking the task as "in process"
+    :return: task
+    """
     global tasks
     if not tasks:
         return json.dumps("nothing_to_do")
@@ -133,6 +176,11 @@ def give_task():
 
 @post("/tasks/post_result")
 def get_result():
+    """
+    Tracking result-posting request
+    Marking the task as "done"
+    :return: "OK"
+    """
     global tasks, result
     task_number = int(request.forms.get('task_number'))
     _result = int(request.forms.get('result'))
@@ -147,6 +195,11 @@ def get_result():
 
 @get("/tasks/result")
 def task_result():
+    """
+    Tracking result-getting request
+    Updating list with done tasks
+    :return: result
+    """
     global tasks, done_tasks
     done_tasks.append({"strings": [substring, main_string],
                        "result": result})

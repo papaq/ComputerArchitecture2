@@ -4,6 +4,11 @@
 
 var client_name = "";
 var xmlhttp = new XMLHttpRequest();
+
+onmessage = function(e){
+    client_name = e.data["name"];
+};
+
 receive_respond_and_do = function () {
 };
 xmlhttp.onreadystatechange = function () {
@@ -34,12 +39,6 @@ n_times_a_in_b = function (a, b) {
     }
     return times;
 };
-
-(function set_name() {
-    get_request("/clients/last_client", function (respond_text) {
-        client_name = JSON.parse(respond_text).name;
-    });
-})();
 
 setInterval(function im_here() {
     get_request("/clients/here/" + client_name, function () {
