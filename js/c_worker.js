@@ -7,6 +7,7 @@ var xmlhttp = new XMLHttpRequest();
 
 onmessage = function(e){
     client_name = e.data["name"];
+    console.log(client_name)
 };
 
 receive_respond_and_do = function () {
@@ -43,7 +44,7 @@ n_times_a_in_b = function (a, b) {
 setInterval(function im_here() {
     get_request("/clients/here/" + client_name, function () {
     })
-}, 1500);
+}, 2500);
 
 setInterval(function i_wanna_work() {
     var answer = "";
@@ -63,4 +64,4 @@ setInterval(function i_wanna_work() {
         });
     });
 
-}, 600);
+}, 3000);

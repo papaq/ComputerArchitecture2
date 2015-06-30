@@ -21,6 +21,8 @@ get_request = function (url, respond_and_do) {
 window.onload = function () {
     get_request("/clients/new_client", function (respond_text) {
         var name = JSON.parse(respond_text).name;
+
+        console.log(name)
         document.getElementById("client_name").innerText = name;
 
         var web_worker = new Worker("/c_worker.js");

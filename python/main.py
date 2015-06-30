@@ -1,6 +1,7 @@
 from bottle import *
 import json
 import uuid
+from time import time
 
 from defs import *
 
@@ -10,6 +11,7 @@ clients = []
 tasks = []
 done_tasks = []
 result = 0
+start_time = 0
 
 
 @error(404)
@@ -83,6 +85,8 @@ def add_new_task():
     """
     global tasks, result
     global substring, main_string
+    global start_time
+    start_time = time()
     substring = request.forms.get('substring')
     main_string = request.forms.get('main_string')
     if len(substring) > len(main_string):
@@ -92,7 +96,8 @@ def add_new_task():
         for i in xrange(len(done_tasks)):
             if done_tasks[i]["strings"][0] == substring and done_tasks[i]["strings"][1] == main_string:
                 return json.dumps({'task_was_done': True,
-                                   'result': done_tasks[i]["result"]})
+                                   'result': done_tasks[i]["result"],
+                                   "time": str(time() - start_time)})
 
     result = 0
     a_len = len(substring)
@@ -204,7 +209,8 @@ def task_result():
     done_tasks.append({"strings": [substring, main_string],
                        "result": result})
 
-    return json.dumps({"result": result})
+    return json.dumps({"result": result,
+                       "time": str(time() - start_time)})
 
 
 run(host='localhost', port=8081, debug=True)

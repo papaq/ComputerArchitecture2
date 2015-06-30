@@ -2,17 +2,6 @@
  * Created by solomon on 25.06.15.
  */
 
-function random_fill(n) {
-    var random_string = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (var i = 0; i < n; i++) {
-        random_string += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-
-    return random_string;
-}
-
 var server_object = server_object || {};
 
 (function (obj) {
@@ -68,7 +57,8 @@ var server_object = server_object || {};
             obj.post_request('/tasks/new_task', encodeURI(post_data), function (respond_text) {
                 var json = JSON.parse(respond_text);
                 if (json.task_was_done) {
-                    document.getElementById("result").value = obj.substring + "=" + json.result;
+                    document.getElementById("result").value = obj.substring + "=" + json.result +
+                                                              "\ntime=" + json.time + " seconds";
                     document.getElementById("start").disabled = false;
                     document.getElementById("done").innerText = "100%";
                 }
@@ -84,13 +74,14 @@ var server_object = server_object || {};
                             if (done == 100) {
                                 obj.get_request('/tasks/result', function (respond_text) {
                                     var json = JSON.parse(respond_text);
-                                    document.getElementById("result").value = obj.substring + "=" + json.result;
+                                    document.getElementById("result").value = obj.substring + "=" + json.result +
+                                                                              "\ntime=" + json.time + " seconds";
                                     document.getElementById("start").disabled = false;
                                     clearInterval(myVar);
                                 })
                             }
                         });
-                    }, 800);
+                    }, 1800);
 
                 }
             });
@@ -106,6 +97,6 @@ var server_object = server_object || {};
             var json = JSON.parse(respond_text);
             document.getElementById("n_clients").innerText = json.count;
         })
-    }, 3000)
+    }, 2000)
 
 })(server_object);
