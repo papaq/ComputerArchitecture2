@@ -44,7 +44,7 @@ n_times_a_in_b = function (a, b) {
 setInterval(function im_here() {
     get_request("/clients/here/" + client_name, function () {
     })
-}, 2000);
+}, 1500);
 
 setInterval(function i_wanna_work() {
     var answer = "";
@@ -64,4 +64,4 @@ setInterval(function i_wanna_work() {
         });
     });
 
-}, 7000);
+}, 600);

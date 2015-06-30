@@ -70,6 +70,7 @@ var server_object = server_object || {};
                 if (json.task_was_done) {
                     document.getElementById("result").value = obj.substring + "=" + json.result;
                     document.getElementById("start").disabled = false;
+                    document.getElementById("done").innerText = "100%";
                 }
 
                 else {
@@ -89,7 +90,7 @@ var server_object = server_object || {};
                                 })
                             }
                         });
-                    }, 3000);
+                    }, 800);
 
                 }
             });
